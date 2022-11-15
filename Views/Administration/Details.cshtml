@@ -1,0 +1,26 @@
+﻿@model Apps.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">FirstName</th>
+            <th scope="col">Email</th>
+            <th scope="col">Roles</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <th scope="row">@Model.Id</th>
+                <td>@Model.FirstName</td>
+                <td>@Model.Email</td>
+                <td>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Details">Add Roles</a>
+                </td>
+            </tr>
+    </tbody>
+</table>
