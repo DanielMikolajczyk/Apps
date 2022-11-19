@@ -35,6 +35,7 @@ namespace Apps.Controllers
         }
 
         // GET: AdministrationController/Details/5
+        [Authorize(Policy = "IsExpert")]
         public async Task<ActionResult> Details(string id)
         {
             var user = await _userManager.Users.Where(u => u.Id == id).FirstOrDefaultAsync();

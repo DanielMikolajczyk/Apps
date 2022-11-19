@@ -1,5 +1,7 @@
+using Apps.Authorization;
 using Apps.Data;
 using Apps.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,7 +35,28 @@ namespace Apps
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddSingleton<IAuthorizationHandler,IsExpertHandler>();
+            services.AddSingleton<IAuthorizationHandler,IsShadowBannedHandler>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsExpert",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new IsExpert()
+                    ));
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsShadowBanned",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new IsShadowBanned()
+                    ));
+            });
 
             //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
