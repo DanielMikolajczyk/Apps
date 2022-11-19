@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Apps.Controllers
 {
-    [Authorize]
+    [Authorize (Policy = "IsAdmin")]
     public class AdministrationController : Controller
     {
         private ApplicationDbContext _context;
@@ -65,18 +66,41 @@ namespace Apps.Controllers
         }
 
         // GET: AdministrationController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string id)
         {
-            return View();
+            var user = await _userManager.FindByIdAsync(id);
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var claims = ApplicationClaimTypes.AppClaimTypes;
+
+            ViewBag.userClaims = userClaims;
+            ViewBag.claims = claims;
+
+            return View(user);
         }
 
         // POST: AdministrationController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(string id, IFormCollection collection)
         {
             try
             {
+                var user = await _userManager.FindByIdAsync(id);
+                var userClaims = await _userManager.GetClaimsAsync(user);
+                foreach (var userClaim in userClaims)
+                {
+                    await _userManager.RemoveClaimAsync(user, userClaim);
+                }
+
+                foreach (var claimId in Request.Form.Keys)
+                {
+                    if(claimId.All(char.IsNumber))
+                    {
+                        var claim = new Claim(ApplicationClaimTypes.AppClaimTypes[Int16.Parse(claimId)].ToString(),"true");
+                        await _userManager.AddClaimAsync(user, claim);
+                    }
+                }
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch

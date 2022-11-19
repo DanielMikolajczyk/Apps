@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Apps.Authorization
 {
-    public class IsExpertHandler : AuthorizationHandler<IsExpertRequirement>
+    public class IsAdminHandler : AuthorizationHandler<IsAdminRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsExpertRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdminRequirement requirement)
         {
-            if (context.User.HasClaim(c => c.Type == "Expert"))
+            if(context.User.HasClaim(c => c.Type == "Admin"))
             {
                 context.Succeed(requirement); 
             }
             return Task.CompletedTask;
         }
-
-
     }
 }

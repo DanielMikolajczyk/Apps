@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Apps.Authorization
 {
-    public class IsShadowBanned : IAuthorizationRequirement
+    public class IsShadowBannedRequirement : IAuthorizationRequirement
     {
-        public IsShadowBanned()
+        public IsShadowBannedRequirement()
         {
 
         }

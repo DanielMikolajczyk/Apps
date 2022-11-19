@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Apps.Authorization
 {
-    public class IsExpert : IAuthorizationRequirement
+    public class IsExpertRequirement : IAuthorizationRequirement
     {
-        public IsExpert()
+        public IsExpertRequirement()
         {
 
         }

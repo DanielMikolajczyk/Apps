@@ -39,22 +39,29 @@ namespace Apps
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddSingleton<IAuthorizationHandler,IsAdminHandler>();
             services.AddSingleton<IAuthorizationHandler,IsExpertHandler>();
             services.AddSingleton<IAuthorizationHandler,IsShadowBannedHandler>();
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("IsExpert",
+                options.AddPolicy("IsAdmin",
                     policyBuilder => policyBuilder.AddRequirements(
-                        new IsExpert()
+                        new IsAdminRequirement()
                     ));
             });
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsExpert",
+                    policyBuilder => policyBuilder.AddRequirements(
+                        new IsExpertRequirement()
+                    ));
+            });
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("IsShadowBanned",
                     policyBuilder => policyBuilder.AddRequirements(
-                        new IsShadowBanned()
+                        new IsShadowBannedRequirement()
                     ));
             });
 

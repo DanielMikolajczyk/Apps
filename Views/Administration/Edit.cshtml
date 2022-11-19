@@ -1,0 +1,74 @@
+﻿@model Apps.Models.ApplicationUser
+
+@{
+    int i = 0;
+    int iterator = 0;
+    ViewBag.Title = "Edit";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">FirstName</th>
+            <th scope="col">Email</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <th scope="row">@Model.Id</th>
+                <td>@Model.FirstName</td>
+                <td>@Model.Email</td>
+            </tr>
+    </tbody>
+</table>
+
+<form method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Claim</th>
+                <th scope="col">Aquired</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in ViewBag.claims)
+            {
+                iterator++;
+                <tr>
+                    <td scope="row">@iterator</td>
+                    <td>
+                        @claim.ToString()
+                    </td>
+                    <td>
+                        @if (ViewBag.userClaims != null)
+                        {
+                            var found = false;
+                            @foreach (var userClaim in ViewBag.userClaims)
+                            {
+
+                                @if (claim == userClaim.Type)
+                                {
+                                    <input name="@i" type="checkbox" checked />
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            @if (!found)
+                            {
+                                <input name="@i" type="checkbox" />
+                            }
+                        }
+                        else
+                        {
+                            <input name="@i" type="checkbox" />
+                        }
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

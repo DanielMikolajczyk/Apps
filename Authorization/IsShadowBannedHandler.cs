@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Apps.Authorization
 {
-    public class IsShadowBannedHandler : AuthorizationHandler<IsShadowBanned>
+    public class IsShadowBannedHandler : AuthorizationHandler<IsShadowBannedRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsShadowBanned requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsShadowBannedRequirement requirement)
         {
             if(context.User.HasClaim(c => c.Type == "ShadowBanned"))
             {
