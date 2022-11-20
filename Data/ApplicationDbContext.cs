@@ -19,5 +19,7 @@ namespace Apps.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Apps.Models.Act> Act { get; set; }
     }
 }
