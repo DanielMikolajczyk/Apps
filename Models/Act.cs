@@ -14,5 +14,6 @@ namespace Apps.Models
         public string Overview { get; set; }
         public int Points { get; set; }
         public string Url { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
 }

@@ -7,29 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Apps.Data;
 using Apps.Models;
-using System.Web;
-using Microsoft.AspNetCore.Identity;
 
 namespace Apps.Controllers
 {
-    public class ActsController : Controller
+    public class CommentsController : Controller
     {
-        private ApplicationDbContext _context;
-        private UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public ActsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public CommentsController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
-        // GET: Acts
+        // GET: Comments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Act.ToListAsync());
+            return View(await _context.Comment.ToListAsync());
         }
 
-        // GET: Acts/Details/5
+        // GET: Comments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,60 +33,39 @@ namespace Apps.Controllers
                 return NotFound();
             }
 
-            var act = await _context.Act
+            var comment = await _context.Comment
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (act == null)
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return View(act);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Details()
-        {
-            var act = await _context.Act.Where(a => a.Id == Int16.Parse(Request.Form["ActId"])).FirstOrDefaultAsync();
-            var email = HttpContext.User.Identity.Name;
-            var user = await _userManager.Users.Where(u => u.UserName == email).FirstOrDefaultAsync();
-
-            var comment = new Comment();
-            comment.Act = act;
-            comment.ApplicationUser = user;
-            comment.Text = Request.Form["Comment"];
-
-            act.Comments.Add(comment);
-            user.Comments.Add(comment);
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            return View(comment);
         }
 
-        // GET: Acts/Create
+        // GET: Comments/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Acts/Create
+        // POST: Comments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Overview,Points,Url")] Act act)
+        public async Task<IActionResult> Create([Bind("Id,Text")] Comment comment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(act);
+                _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(act);
+            return View(comment);
         }
 
-        // GET: Acts/Edit/5
+        // GET: Comments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,22 +73,22 @@ namespace Apps.Controllers
                 return NotFound();
             }
 
-            var act = await _context.Act.FindAsync(id);
-            if (act == null)
+            var comment = await _context.Comment.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound();
             }
-            return View(act);
+            return View(comment);
         }
 
-        // POST: Acts/Edit/5
+        // POST: Comments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Overview,Points,Url")] Act act)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text")] Comment comment)
         {
-            if (id != act.Id)
+            if (id != comment.Id)
             {
                 return NotFound();
             }
@@ -122,12 +97,12 @@ namespace Apps.Controllers
             {
                 try
                 {
-                    _context.Update(act);
+                    _context.Update(comment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ActExists(act.Id))
+                    if (!CommentExists(comment.Id))
                     {
                         return NotFound();
                     }
@@ -138,10 +113,10 @@ namespace Apps.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(act);
+            return View(comment);
         }
 
-        // GET: Acts/Delete/5
+        // GET: Comments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,30 +124,30 @@ namespace Apps.Controllers
                 return NotFound();
             }
 
-            var act = await _context.Act
+            var comment = await _context.Comment
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (act == null)
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return View(act);
+            return View(comment);
         }
 
-        // POST: Acts/Delete/5
+        // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var act = await _context.Act.FindAsync(id);
-            _context.Act.Remove(act);
+            var comment = await _context.Comment.FindAsync(id);
+            _context.Comment.Remove(comment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ActExists(int id)
+        private bool CommentExists(int id)
         {
-            return _context.Act.Any(e => e.Id == id);
+            return _context.Comment.Any(e => e.Id == id);
         }
     }
 }
