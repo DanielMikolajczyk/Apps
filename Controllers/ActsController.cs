@@ -38,6 +38,7 @@ namespace Apps.Controllers
             }
 
             var act = await _context.Act
+                .Include(a => a.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (act == null)
@@ -49,21 +50,21 @@ namespace Apps.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Details()
+        public IActionResult Details()
         {
-            var act = await _context.Act.Where(a => a.Id == Int16.Parse(Request.Form["ActId"])).FirstOrDefaultAsync();
+            var sth = Request.Form;
+            Act act = _context.Act.Where(a => a.Id == Int16.Parse(Request.Form["ActId"]))
+                .Include(a => a.Comments).FirstOrDefault();
             var email = HttpContext.User.Identity.Name;
-            var user = await _userManager.Users.Where(u => u.UserName == email).FirstOrDefaultAsync();
+            var user = _userManager.Users.Where(u => u.UserName == email).FirstOrDefault();
 
             var comment = new Comment();
-            comment.Act = act;
-            comment.ApplicationUser = user;
             comment.Text = Request.Form["Comment"];
 
             act.Comments.Add(comment);
-            user.Comments.Add(comment);
+            //user.Comments.Add(comment);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
