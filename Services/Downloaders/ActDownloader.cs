@@ -36,30 +36,34 @@ namespace Apps.Services.Downloaders
 
                 while(true)
                 {
-                    string downloadUrl = generateDownloadUrl(pdfId);
                     string fullPath = directoryPath + _directorySeparator + pdfId + _fileExtension;
-                    try
+
+                    if(!checkIfActAlreadyDownloaded(fullPath))
                     {
-                        client.DownloadFile(downloadUrl, fullPath);
+                        string downloadUrl = generateDownloadUrl(pdfId);
+                        try
+                        {
+                            client.DownloadFile(downloadUrl, fullPath);
 
-                        Pdf pdf = new Pdf();
-                        pdf.Title = pdfId.ToString();
-                        pdf.Path = fullPath;
+                            Pdf pdf = new Pdf();
+                            pdf.Title = pdfId.ToString();
+                            pdf.Path = fullPath;
 
-                        Act act = new Act();
-                        act.Title = pdfId.ToString();
-                        act.Overview = "To be added.";
-                        act.Points = 0;
-                        act.Url = downloadUrl;
-                        act.Pdf = pdf;
+                            Act act = new Act();
+                            act.Title = pdfId.ToString();
+                            act.Overview = "To be added.";
+                            act.Points = 0;
+                            act.Url = downloadUrl;
+                            act.Pdf = pdf;
 
-                        _context.Add(pdf);
-                        _context.Add(act);
-                        _context.SaveChanges();
-                    }
-                    catch(WebException ex)
-                    {
-                        break;
+                            _context.Add(pdf);
+                            _context.Add(act);
+                            _context.SaveChanges();
+                        }
+                        catch(WebException ex)
+                        {
+                            break;
+                        }
                     }
 
                     pdfId++;
@@ -82,30 +86,32 @@ namespace Apps.Services.Downloaders
                 string downloadUrl = generateDownloadUrl(pdfId);
                 string fullPath = directoryPath + _directorySeparator + pdfId + _fileExtension;
 
-                try
+                if (!checkIfActAlreadyDownloaded(fullPath))
                 {
-                    client.DownloadFile(downloadUrl, fullPath);
+                    try
+                    {
+                        client.DownloadFile(downloadUrl, fullPath);
 
-                    Pdf pdf = new Pdf();
-                    pdf.Title = pdfId.ToString();
-                    pdf.Path = fullPath;
+                        Pdf pdf = new Pdf();
+                        pdf.Title = pdfId.ToString();
+                        pdf.Path = fullPath;
 
-                    Act act = new Act();
-                    act.Title = pdfId.ToString();
-                    act.Overview = "To be added.";
-                    act.Points = 0;
-                    act.Url = downloadUrl;
-                    act.Pdf = pdf;
+                        Act act = new Act();
+                        act.Title = pdfId.ToString();
+                        act.Overview = "To be added.";
+                        act.Points = 0;
+                        act.Url = downloadUrl;
+                        act.Pdf = pdf;
 
-                    _context.Add(pdf);
-                    _context.Add(act);
-                    _context.SaveChanges();
-                }
-                catch (WebException ex)
-                {
+                        _context.Add(pdf);
+                        _context.Add(act);
+                        _context.SaveChanges();
+                    }
+                    catch (WebException ex)
+                    {
                     returnValue = 1;
+                    }
                 }
-
             }
 
             return returnValue;
@@ -143,6 +149,11 @@ namespace Apps.Services.Downloaders
             returnString = year + stringId + "01";
 
             return returnString;
+        }
+
+        private bool checkIfActAlreadyDownloaded(string path)
+        {
+            return File.Exists(path);
         }
 
     }
