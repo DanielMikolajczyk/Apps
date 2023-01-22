@@ -8,6 +8,6 @@ namespace Apps.Services.Downloaders
     interface IDownloader
     {
         public int download(int id);
-        public void downloadAll();
+        public void downloadAll(string year);
     }
 }

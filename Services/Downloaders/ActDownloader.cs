@@ -20,10 +20,12 @@ namespace Apps.Services.Downloaders
             _context = context;
         }
 
-        public override void downloadAll()
+        public override void downloadAll(string year)
         {
-            DateTime date = DateTime.Now;
-            int year = date.Year;
+            if("" == year)
+            {
+                year = DateTime.Now.Year.ToString();
+            }
 
             string directoryPath = _path + year;
 

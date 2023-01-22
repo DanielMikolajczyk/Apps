@@ -1,0 +1,27 @@
+﻿@model Apps.Models.Pdf
+
+<h1>Download</h1>
+
+<h4>Pdf</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="DownloadPdf">
+            <div class="form-group">
+                <label class="control-label">All acts</label>
+                <input class="form-control" name="All" type="checkbox" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Year</label>
+                <input class="form-control" name="Year"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Id</label>
+                <input class="form-control" name="ActId"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Download" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

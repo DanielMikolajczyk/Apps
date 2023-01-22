@@ -22,5 +22,6 @@ namespace Apps.Data
 
         public DbSet<Apps.Models.Act> Act { get; set; }
         public DbSet<Apps.Models.Comment> Comment { get; set; }
+        public DbSet<Apps.Models.Pdf> Pdf { get; set; }
     }
 }

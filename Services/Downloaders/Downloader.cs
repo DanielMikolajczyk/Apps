@@ -21,7 +21,7 @@ namespace Apps.Services.Downloaders
             throw new NotImplementedException();
         }
 
-        public virtual void downloadAll()
+        public virtual void downloadAll(string year)
         {
             throw new NotImplementedException();
         }
