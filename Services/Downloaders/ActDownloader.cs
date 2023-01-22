@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Apps.Data;
+using Apps.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,10 +13,11 @@ namespace Apps.Services.Downloaders
     public class ActDownloader : Downloader
     {
         private string _downloadUrl = @"https://dziennikustaw.gov.pl/D";
+        private ApplicationDbContext _context;
 
-        public ActDownloader() : base()
+        public ActDownloader(ApplicationDbContext context) : base()
         {
-
+            _context = context;
         }
 
         public override void downloadAll()
@@ -38,11 +41,27 @@ namespace Apps.Services.Downloaders
                     try
                     {
                         client.DownloadFile(downloadUrl, fullPath);
+
+                        Pdf pdf = new Pdf();
+                        pdf.Title = pdfId.ToString();
+                        pdf.Path = fullPath;
+
+                        Act act = new Act();
+                        act.Title = pdfId.ToString();
+                        act.Overview = "To be added.";
+                        act.Points = 0;
+                        act.Url = downloadUrl;
+                        act.Pdf = pdf;
+
+                        _context.Add(pdf);
+                        _context.Add(act);
+                        _context.SaveChanges();
                     }
                     catch(WebException ex)
                     {
                         break;
                     }
+
                     pdfId++;
                 }
             }
@@ -66,11 +85,27 @@ namespace Apps.Services.Downloaders
                 try
                 {
                     client.DownloadFile(downloadUrl, fullPath);
+
+                    Pdf pdf = new Pdf();
+                    pdf.Title = pdfId.ToString();
+                    pdf.Path = fullPath;
+
+                    Act act = new Act();
+                    act.Title = pdfId.ToString();
+                    act.Overview = "To be added.";
+                    act.Points = 0;
+                    act.Url = downloadUrl;
+                    act.Pdf = pdf;
+
+                    _context.Add(pdf);
+                    _context.Add(act);
+                    _context.SaveChanges();
                 }
                 catch (WebException ex)
                 {
                     returnValue = 1;
                 }
+
             }
 
             return returnValue;

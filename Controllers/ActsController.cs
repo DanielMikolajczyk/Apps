@@ -28,8 +28,8 @@ namespace Apps.Controllers
         // GET: Acts
         public async Task<IActionResult> Index()
         {
-            ActDownloader actDownloader = new ActDownloader();
-            actDownloader.downloadAll();
+            ActDownloader actDownloader = new ActDownloader(_context);
+            //actDownloader.downloadAll();
             return View(await _context.Act.ToListAsync());
         }
 

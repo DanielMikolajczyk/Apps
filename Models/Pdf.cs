@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace Apps.Models
 {
-    public class Act
+    public class Pdf
     {
         [Key]
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Overview { get; set; }
-        public int Points { get; set; }
-        public string Url { get; set; }
-        public ICollection<Comment> Comments { get; set; }
-        public Pdf Pdf { get; set; }
+        public string Path { get; set; }
+        public int ActId { get; set; }
+        public Act Act { get; set; }
     }
 }
