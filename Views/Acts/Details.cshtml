@@ -38,17 +38,18 @@
 </div>
 ----------------
 <div>
-    <dl class="row">
+    <div>
         @if (Model.Comments != null)
         {
             @foreach (var comment in Model.Comments)
             {
-                <dt class="col-sm-2">
-                    @comment.Text
-                </dt>
+                <div>
+                    Nowy komentarz: 
+                    Tekst: @comment.Text
+                </div>
             }
         }
-    </dl>
+    </div>
 </div>
 ----------------
 <div>

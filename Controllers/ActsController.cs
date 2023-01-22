@@ -9,6 +9,8 @@ using Apps.Data;
 using Apps.Models;
 using System.Web;
 using Microsoft.AspNetCore.Identity;
+using Apps.Services;
+using Apps.Services.Downloaders;
 
 namespace Apps.Controllers
 {
@@ -26,6 +28,8 @@ namespace Apps.Controllers
         // GET: Acts
         public async Task<IActionResult> Index()
         {
+            ActDownloader actDownloader = new ActDownloader();
+            actDownloader.downloadAll();
             return View(await _context.Act.ToListAsync());
         }
 
@@ -52,17 +56,15 @@ namespace Apps.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Details()
         {
-            var sth = Request.Form;
             Act act = _context.Act.Where(a => a.Id == Int16.Parse(Request.Form["ActId"]))
                 .Include(a => a.Comments).FirstOrDefault();
             var email = HttpContext.User.Identity.Name;
-            var user = _userManager.Users.Where(u => u.UserName == email).FirstOrDefault();
+            ApplicationUser user = _userManager.Users.Where(u => u.UserName == email).FirstOrDefault();
 
             var comment = new Comment();
             comment.Text = Request.Form["Comment"];
-
+            user.Comments.Add(comment);
             act.Comments.Add(comment);
-            //user.Comments.Add(comment);
 
             _context.SaveChanges();
 
