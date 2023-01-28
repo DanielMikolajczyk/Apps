@@ -12,5 +12,6 @@ namespace Apps.Models
         public string Surname { get; set; }
         public string MiddleName { get; set; }
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<ApplicationUserDataChangeRequest> ApplicationUserDataChangeRequests { get; set; }
     }
 }

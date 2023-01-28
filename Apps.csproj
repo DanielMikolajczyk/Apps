@@ -16,6 +16,8 @@
     <Compile Remove="Data\Migrations\20221120174447_Acts_Init.Designer.cs" />
     <Compile Remove="Data\Migrations\20221120174511_Acts_Init.cs" />
     <Compile Remove="Data\Migrations\20221120174511_Acts_Init.Designer.cs" />
+    <Compile Remove="Data\Migrations\20230122203437_Pdf-Migration.cs" />
+    <Compile Remove="Data\Migrations\20230122203437_Pdf-Migration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

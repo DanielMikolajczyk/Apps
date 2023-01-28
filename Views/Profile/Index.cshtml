@@ -1,0 +1,50 @@
+﻿@model Apps.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Witaj @Model.FirstName @Model.MiddleName!</h1>
+<p>
+    <a asp-action="Edit">Wnieś o zmianę danych</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.MiddleName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="model.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="model.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="model.Id">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
