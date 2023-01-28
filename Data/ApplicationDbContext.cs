@@ -24,5 +24,7 @@ namespace Apps.Data
         public DbSet<Apps.Models.Comment> Comment { get; set; }
         public DbSet<Apps.Models.Pdf> Pdf { get; set; }
         public DbSet<Apps.Models.ApplicationUserDataChangeRequest> ApplicationUserDataChangeRequests { get; set; }
+        public DbSet<Apps.Models.Expert> Experts { get; set; }
+
     }
 }
