@@ -20,6 +20,8 @@
     <Compile Remove="Data\Migrations\20230122203437_Pdf-Migration.Designer.cs" />
     <Compile Remove="Data\Migrations\20230128112030_Expert-Init.cs" />
     <Compile Remove="Data\Migrations\20230128112030_Expert-Init.Designer.cs" />
+    <Compile Remove="Data\Migrations\20230129102229_1.cs" />
+    <Compile Remove="Data\Migrations\20230129102229_1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

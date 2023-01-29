@@ -14,5 +14,6 @@ namespace Apps.Models
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ApplicationUserDataChangeRequest> ApplicationUserDataChangeRequests { get; set; }
         public ICollection<ApplicationUserExpert> ApplicationUserExperts { get; set; }
+        public ICollection<ApplicationUserExpertChangeRequest> ApplicationUserExpertChangeRequests { get; set; }
     }
 }

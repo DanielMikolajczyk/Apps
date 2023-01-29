@@ -27,6 +27,7 @@ namespace Apps.Data
         public DbSet<Apps.Models.ApplicationUserDataChangeRequest> ApplicationUserDataChangeRequests { get; set; }
         public DbSet<Apps.Models.Expert> Experts { get; set; }
         public DbSet<Apps.Models.ApplicationUserExpert> ApplicationUserExperts { get; set; }
+        public DbSet<Apps.Models.ApplicationUserExpertChangeRequest> ApplicationUserExpertChangeRequests { get; set; }
 
     }
 }
