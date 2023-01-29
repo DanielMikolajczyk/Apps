@@ -18,6 +18,7 @@ namespace Apps.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ApplicationUserExpert>().HasKey(ae => new { ae.ApplicationUserId, ae.ExpertId });
+            builder.Entity<ApplicationUserExpertChangeRequestExpert>().HasKey(ae => new { ae.ApplicationUserExpertChangeRequestId, ae.ExpertId });
             base.OnModelCreating(builder);
         }
 
@@ -28,6 +29,7 @@ namespace Apps.Data
         public DbSet<Apps.Models.Expert> Experts { get; set; }
         public DbSet<Apps.Models.ApplicationUserExpert> ApplicationUserExperts { get; set; }
         public DbSet<Apps.Models.ApplicationUserExpertChangeRequest> ApplicationUserExpertChangeRequests { get; set; }
+        public DbSet<Apps.Models.ApplicationUserExpertChangeRequestExpert> ApplicationUserExpertChangeRequestExperts { get; set; }
 
     }
 }
