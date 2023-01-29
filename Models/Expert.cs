@@ -11,6 +11,6 @@ namespace Apps.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-
+        ICollection<ApplicationUserExpert> ApplicationUserExperts { get; set; }
     }
 }

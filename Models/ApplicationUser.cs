@@ -13,5 +13,6 @@ namespace Apps.Models
         public string MiddleName { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<ApplicationUserDataChangeRequest> ApplicationUserDataChangeRequests { get; set; }
+        public ICollection<ApplicationUserExpert> ApplicationUserExperts { get; set; }
     }
 }

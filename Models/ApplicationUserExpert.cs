@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Apps.Models
 {
-    public class ApplicationUser_Expert
+    public class ApplicationUserExpert
     {
-        [Key]
-        public int Id { get; set; }
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public int ExpertId { get; set; }
         public Expert Expert { get; set; }
