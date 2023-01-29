@@ -21,30 +21,22 @@ namespace Apps.Controllers
     {
         private ApplicationDbContext _context;
         private UserManager<ApplicationUser> _userManager;
-        private SignInManager<ApplicationUser> _signInManager;
 
         public ProfileController(
             ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         // GET: Profile/
         public async Task<IActionResult> Index()
         {
-            //if (_signInManager.IsSignedIn(User))
-            //{
-                string email = HttpContext.User.Identity.Name;
-                ApplicationUser user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            string email = HttpContext.User.Identity.Name;
+            ApplicationUser user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
                 
-                return View(user);
-            //}
-            
-            //return RedirectToAction("Index", "Login");
+            return View(user);
         }
 
         // GET: Profile/Edit
@@ -98,28 +90,42 @@ namespace Apps.Controllers
         // POST: Profile/ExpertRequest
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExpertRequest([Bind("Id,FirstName,Surname,MiddleName,Email,PhoneNumber")] ApplicationUser userRequest)
+        public async Task<ActionResult> ExpertRequest(ApplicationUser userRequest)
         {
             string email = HttpContext.User.Identity.Name;
-            ApplicationUser user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            ApplicationUser user = await _context.Users.Include(u => u.ApplicationUserExperts).Where(u => u.Email == email).FirstOrDefaultAsync();
+            ICollection<Expert> expertsDb = await _context.Experts.ToListAsync();
+            ICollection<Expert> expertChangeList = new List<Expert>();
+            string[] expertsForm = Request.Form["Expert[]"];
 
-            if (ModelState.IsValid)
+            foreach(string id in expertsForm)
             {
-                ApplicationUserDataChangeRequest userDataChangeRequest = new ApplicationUserDataChangeRequest();
-                userDataChangeRequest.FirstName = userRequest.FirstName;
-                userDataChangeRequest.Surname = userRequest.Surname;
-                userDataChangeRequest.MiddleName = userRequest.MiddleName;
-                userDataChangeRequest.Email = userRequest.Email;
-                userDataChangeRequest.PhoneNumber = userRequest.PhoneNumber;
-                userDataChangeRequest.ApplicationUser = user;
-
-                _context.Add(userDataChangeRequest);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                if(expertsDb.Any(e => e.Id.ToString() == id))
+                {
+                    expertChangeList.Add(expertsDb.Where(e => e.Id.ToString() == id).First());
+                }
             }
 
-            return View(user);
+            ApplicationUserExpertChangeRequest applicationUserExpertChangeRequest = new ApplicationUserExpertChangeRequest()
+            {
+                ApplicationUser = user,
+            };
+            await _context.AddAsync(applicationUserExpertChangeRequest);
+
+            ICollection<ApplicationUserExpertChangeRequestExpert> applicationUserExpertChangeRequestExperts = new List<ApplicationUserExpertChangeRequestExpert>();
+            foreach(Expert expert in expertChangeList)
+            {
+                applicationUserExpertChangeRequestExperts.Add(new ApplicationUserExpertChangeRequestExpert()
+                {
+                    ApplicationUserExpertChangeRequest = applicationUserExpertChangeRequest,
+                    Expert = expert,
+                }
+                );
+            }
+            await _context.AddRangeAsync(applicationUserExpertChangeRequestExperts);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
     }
