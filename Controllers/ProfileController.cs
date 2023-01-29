@@ -83,5 +83,44 @@ namespace Apps.Controllers
             return View(user);
         }
 
+        // GET: Profile/ExpertRequest
+        public async Task<ActionResult> ExpertRequest()
+        {
+            string email = HttpContext.User.Identity.Name;
+            ApplicationUser user = await _context.Users.Include(u => u.ApplicationUserExperts).Where(u => u.Email == email).FirstOrDefaultAsync();
+            ICollection<Expert> expertsDb = await _context.Experts.ToListAsync();
+
+            ViewBag.Experts = expertsDb;
+
+            return View(user);
+        }
+
+        // POST: Profile/ExpertRequest
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ExpertRequest([Bind("Id,FirstName,Surname,MiddleName,Email,PhoneNumber")] ApplicationUser userRequest)
+        {
+            string email = HttpContext.User.Identity.Name;
+            ApplicationUser user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+
+            if (ModelState.IsValid)
+            {
+                ApplicationUserDataChangeRequest userDataChangeRequest = new ApplicationUserDataChangeRequest();
+                userDataChangeRequest.FirstName = userRequest.FirstName;
+                userDataChangeRequest.Surname = userRequest.Surname;
+                userDataChangeRequest.MiddleName = userRequest.MiddleName;
+                userDataChangeRequest.Email = userRequest.Email;
+                userDataChangeRequest.PhoneNumber = userRequest.PhoneNumber;
+                userDataChangeRequest.ApplicationUser = user;
+
+                _context.Add(userDataChangeRequest);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(user);
+        }
+
     }
 }
