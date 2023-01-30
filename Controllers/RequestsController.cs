@@ -97,7 +97,7 @@ namespace Apps.Controllers
                     {
                         ApplicationUser = user,
                         Expert = expertsDb.FirstOrDefault(e => e.Id.ToString() == id)
-                });
+                    });
                 }
             }
 
