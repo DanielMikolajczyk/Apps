@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Apps.Data
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model Apps.Models.ApplicationUserExpertChangeRequest
+
+@{
+    ViewBag.Title = "";
+}
+
+<h4> Expert request for user: @Model.ApplicationUser.Id</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h6>User data:</h6>
+            <p>Name: @Model.ApplicationUser.FirstName</p>
+            <p>Surname: @Model.ApplicationUser.Surname</p>
+            <p>Middle name: @Model.ApplicationUser.MiddleName</p>
+            <p>Email: @Model.ApplicationUser.Email</p>
+            <p>Phone Number: @Model.ApplicationUser.PhoneNumber</p>
+        </div>
+        <div class="col-sm">
+            <h6>Requested experts: </h6>
+            <form class="col-sm" asp-action="Expert">
+                <h6>New data</h6>
+                @foreach (Expert expert in ViewBag.Experts)
+                {
+                    @if (Model.ApplicationUserExpertChangeRequestExperts.Any(e => e.ExpertId == expert.Id))
+                    {
+                        <p>@expert.Name - Requested</p>
+                        <input class="form-control" name="Expert[]" type="checkbox" value="@expert.Id" checked />
+                    }
+                    else
+                    {
+                        <p>@expert.Name</p>
+                        <input class="form-control" name="Expert[]" type="checkbox" value="@expert.Id" />
+                    }
+                }
+                <div class="form-group">
+                    <input type="submit" value="Zapisz" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -11,6 +11,7 @@ using System.Web;
 using Microsoft.AspNetCore.Identity;
 using Apps.Services;
 using Apps.Services.Downloaders;
+using System.Security.Claims;
 
 namespace Apps.Controllers
 {
@@ -175,5 +176,29 @@ namespace Apps.Controllers
         {
             return _context.Act.Any(e => e.Id == id);
         }
+
+        //Give all claims
+        public async Task<IActionResult> giveClaims()
+        {
+            string email = HttpContext.User.Identity.Name;
+            ApplicationUser user = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            foreach (var userClaim in userClaims)
+            {
+                await _userManager.RemoveClaimAsync(user, userClaim);
+                }
+
+            foreach (var claimName in ApplicationClaimTypes.AppClaimTypes)
+            {
+                var claim = new Claim(claimName, "true");
+                await _userManager.AddClaimAsync(user, claim);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
     }
 }

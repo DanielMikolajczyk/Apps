@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Apps.Data
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewBag.Title = "";
+}
+
+<h1> User data change request </h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">User</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (null != ViewBag.UserDataChangeRequests)
+        {
+            @foreach (var request in ViewBag.UserDataChangeRequests)
+            {
+                <tr>
+                    <td>
+                        @request.Id
+                    </td>
+                    <td>
+                        @request.ApplicationUser.Id
+                    </td>
+                    <td>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Requests" asp-action="UserData" asp-route-id="@request.Id">Resolve</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <td colspan="3">There aren't any available requests.</td>
+        }
+    </tbody>
+</table>
+
+<hr/>
+
+<h1> User expert status request </h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">User</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (null != ViewBag.ExpertChangeRequests)
+        {
+            @foreach (var request in ViewBag.ExpertChangeRequests)
+            {
+                <tr>
+                    <td>
+                        @request.id
+                    </td>
+                    <td>
+                        @request.ApplicationUser.Id
+                    </td>
+                    <td>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Requests" asp-action="Expert" asp-route-id="@request.id">Resolve</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <td colspan="3">There aren't any available requests.</td>
+        }
+        </tbody>
+    </table>
