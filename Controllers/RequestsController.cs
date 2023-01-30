@@ -82,11 +82,30 @@ namespace Apps.Controllers
         // POST: Requests/Expert
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Expert()
+        public async Task<ActionResult> Expert(ApplicationUserExpertChangeRequest request)
         {
-            //ApplicationUserDataChangeRequest request = await _context.ApplicationUserDataChangeRequests.Include(r => r.ApplicationUser).Where(r => r.Id == id).FirstOrDefaultAsync();
+            ApplicationUser user = await _context.Users.Where(u => u.Id == Request.Form["UserId"].ToString()).Include(u => u.ApplicationUserExperts).FirstOrDefaultAsync();
+            string[] experts = Request.Form["Expert[]"];
+            ICollection<Expert> expertsDb = await _context.Experts.ToListAsync();
+            ICollection<ApplicationUserExpert> userExpertsList = new List<ApplicationUserExpert>();
 
-            return View();
+            foreach (string id in experts)
+            {
+                if(expertsDb.Any(e => e.Id.ToString() == id))
+                {
+                    userExpertsList.Add(new ApplicationUserExpert()
+                    {
+                        ApplicationUser = user,
+                        Expert = expertsDb.FirstOrDefault(e => e.Id.ToString() == id)
+                });
+                }
+            }
+
+            user.ApplicationUserExperts = userExpertsList;
+            _context.ApplicationUserExpertChangeRequests.Remove(request);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
