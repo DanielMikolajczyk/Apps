@@ -50,11 +50,19 @@ namespace Apps.Controllers
         // POST: Requests/UserData/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UserData()
+        public async Task<ActionResult> UserData(ApplicationUserDataChangeRequest request)
         {
-            //ApplicationUserDataChangeRequest request = await _context.ApplicationUserDataChangeRequests.Include(r => r.ApplicationUser).Where(r => r.Id == id).FirstOrDefaultAsync();
+            ApplicationUser user = await _context.Users.Where(u => u.Id == Request.Form["UserId"].ToString()).FirstOrDefaultAsync();
 
-            return View();
+            user.FirstName = Request.Form["FirstName"].ToString();
+            user.Surname = Request.Form["Surname"].ToString();
+            user.MiddleName = Request.Form["MiddleName"].ToString();
+            user.PhoneNumber = Request.Form["PhoneNumber"].ToString();
+
+            _context.ApplicationUserDataChangeRequests.Remove(request);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Requests/Expert/{id}
