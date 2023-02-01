@@ -28,26 +28,59 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Overview)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Points)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Url)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Overview)
+                </td>
+                <td class="row">
+                    <span class="text-success col-sm" data-vote="+" data-id="@item.Id"> + </span>
+                    @if(null != @item.ActVotes)
+                    {
+
+                        <div class="col-sm font-weight-bold">@item.ActVotes.Sum(i => i.Vote)</div>
+                    }
+                    else
+                    {
+                        <div class="col-sm font-weight-bold">0</div>
+                    }
+                    <span class="text-danger col-sm" data-vote="-" data-id="@item.Id"> - </span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready(() => {
+            $('[data-id]').click((e) => {
+                var id = $(e.currentTarget).data('id');
+                var vote = $(e.currentTarget).data('vote');
+                $.ajax({
+                    type: "GET",
+                    url: "/api/ApiActs/" + vote + "." + id,
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            });
+        });
+    </script>
+}

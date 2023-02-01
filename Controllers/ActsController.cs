@@ -29,7 +29,7 @@ namespace Apps.Controllers
         // GET: Acts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Act.ToListAsync());
+            return View(await _context.Act.Include(a => a.ActVotes).ToListAsync());
         }
 
         // GET: Acts/Details/5

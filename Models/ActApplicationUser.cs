@@ -11,5 +11,7 @@ namespace Apps.Models
         public Act Act { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public int Vote { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
