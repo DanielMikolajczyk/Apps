@@ -66,8 +66,6 @@ namespace Apps.Controllers.API
         {
             string value2 = value;
             value2 += "123";
-
-
         }
     }
 }

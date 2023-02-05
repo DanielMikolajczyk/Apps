@@ -20,6 +20,8 @@ namespace Apps.Data
             builder.Entity<ApplicationUserExpert>().HasKey(ae => new { ae.ApplicationUserId, ae.ExpertId });
             builder.Entity<ApplicationUserExpertChangeRequestExpert>().HasKey(ae => new { ae.ApplicationUserExpertChangeRequestId, ae.ExpertId });
             builder.Entity<ActApplicationUser>().HasKey(au => new { au.ActId, au.ApplicationUserId});
+            builder.Entity<CommentApplicationUser>().HasKey(ca => new { ca.ApplicationUserId, ca.CommentId });
+
             base.OnModelCreating(builder);
         }
 
@@ -32,6 +34,7 @@ namespace Apps.Data
         public DbSet<Apps.Models.ApplicationUserExpertChangeRequest> ApplicationUserExpertChangeRequests { get; set; }
         public DbSet<Apps.Models.ApplicationUserExpertChangeRequestExpert> ApplicationUserExpertChangeRequestExperts { get; set; }
         public DbSet<Apps.Models.ActApplicationUser> ActApplicationUsers { get; set; }
+        public DbSet<Apps.Models.CommentApplicationUser> CommentApplicationUsers { get; set; }
 
     }
 }

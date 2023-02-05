@@ -26,7 +26,15 @@
             @Html.DisplayNameFor(model => model.Points)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Points)
+            @if (null != Model.ActVotes)
+            {
+
+                <div class="col-sm font-weight-bold">@Model.ActVotes.Sum(i => i.Vote)</div>
+            }
+            else
+            {
+                <div class="col-sm font-weight-bold">0</div>
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Url)
@@ -36,21 +44,41 @@
         </dd>
     </dl>
 </div>
-----------------
+Comments Section
 <div>
     <div>
-        @if (Model.Comments != null)
+        @if (null != ViewBag.Comments)
         {
-            @foreach (var comment in Model.Comments)
+            @foreach (Comment comment in ViewBag.Comments)
             {
-                <div>
-                    Nowy komentarz: 
-                    Tekst: @comment.Text
+                <div class="row my-3">
+                    <div class="col-sm">Autor: @comment.ApplicationUser.FirstName @comment.ApplicationUser.MiddleName, </div>
+                    <div class="col-sm row">
+                        <span class="text-success col-sm" data-vote="+" data-id="@comment.Id"> + </span>
+                        @if (null != comment.CommentVotes)
+                        {
+
+                            <div class="col-sm font-weight-bold">@comment.CommentVotes.Sum(i => i.Vote)</div>
+                        }
+                        else
+                        {
+                            <div class="col-sm font-weight-bold">0</div>
+                        }
+                        <span class="text-danger col-sm" data-vote="-" data-id="@comment.Id"> - </span>
+                    </div>
                 </div>
+                <div>Tekst: @comment.Text</div>
             }
         }
     </div>
 </div>
+
+----------------
+
+<div>
+    <button data-event="LoadComments">Załaduj więcej komentarzy</button>
+</div>
+
 ----------------
 <div>
     <form asp-action="Details">
@@ -71,3 +99,49 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(() => {
+            $('[data-id]').click((e) => {
+                var id = $(e.currentTarget).data('id');
+                var vote = $(e.currentTarget).data('vote');
+                $.ajax({
+                    type: "GET",
+                    url: "/api/ApiComments/" + vote + "." + id,
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(() => {
+            $('[data-event]').click((e) => {
+                var dataList = $('[data-id]').map(function () {
+                    return $(this).data("id");
+                }).get();
+                var ids = dataList.filter((v, i, a) => a.indexOf(v) === i);
+                var idsString = ids.join(".");
+                $.ajax({
+                    type: "GET",
+                    url: "/api/ApiComments/comments/" + idsString,
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            });
+        });
+    </script>
+}

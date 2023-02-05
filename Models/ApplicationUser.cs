@@ -16,5 +16,7 @@ namespace Apps.Models
         public ICollection<ApplicationUserExpert> ApplicationUserExperts { get; set; }
         public ICollection<ApplicationUserExpertChangeRequest> ApplicationUserExpertChangeRequests { get; set; }
         public ICollection<ActApplicationUser> ActVotes { get; set; }
+        public ICollection<CommentApplicationUser> CommentVotes { get; set; }
+
     }
 }

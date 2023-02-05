@@ -13,5 +13,6 @@ namespace Apps.Models
         public string Text { get; set; }
         public Act Act { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public ICollection<CommentApplicationUser> CommentVotes { get; set; }
     }
 }

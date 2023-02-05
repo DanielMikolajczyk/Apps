@@ -35,6 +35,8 @@ namespace Apps.Controllers
         // GET: Acts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ICollection<Comment> comments = new List<Comment>();
+
             if (id == null)
             {
                 return NotFound();
@@ -42,13 +44,25 @@ namespace Apps.Controllers
 
             var act = await _context.Act
                 .Include(a => a.Comments)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(a => a.ActVotes)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             if (act == null)
             {
                 return NotFound();
             }
 
+            if(null != act.Comments)
+            {
+                foreach(Comment comment in act.Comments)
+
+                {
+                    Comment dbComment = await _context.Comment.Include(c => c.ApplicationUser).Include(c => c.CommentVotes).FirstOrDefaultAsync(c => c.Id == comment.Id);
+                    comments.Add(dbComment);
+                }
+            }
+
+            ViewBag.Comments = comments;
             return View(act);
         }
         [HttpPost]
@@ -57,8 +71,8 @@ namespace Apps.Controllers
         {
             Act act = _context.Act.Where(a => a.Id == Int16.Parse(Request.Form["ActId"]))
                 .Include(a => a.Comments).FirstOrDefault();
-            var email = HttpContext.User.Identity.Name;
-            ApplicationUser user = _userManager.Users.Where(u => u.UserName == email).FirstOrDefault();
+            var email = User.Identity.Name;
+            ApplicationUser user = _userManager.Users.Include(u => u.Comments).Where(u => u.UserName == email).FirstOrDefault();
 
             var comment = new Comment();
             comment.Text = Request.Form["Comment"];
