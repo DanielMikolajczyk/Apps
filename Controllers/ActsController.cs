@@ -29,7 +29,18 @@ namespace Apps.Controllers
         // GET: Acts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Act.Include(a => a.ActVotes).ToListAsync());
+            ICollection<Act> actList;
+
+            if (User.HasClaim("Admin", "true"))
+            {
+                actList = await _context.Act.Include(a => a.ActVotes).ToListAsync();
+            }
+            else
+            {
+                actList = await _context.Act.Include(a => a.ActVotes).Where(a => a.Visible == true).ToListAsync();
+            }
+
+            return View(actList);
         }
 
         // GET: Acts/Details/5
@@ -142,6 +153,8 @@ namespace Apps.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Experts = await _context.Experts.ToListAsync();
+
             return View(act);
         }
 
@@ -150,15 +163,32 @@ namespace Apps.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Overview,Points,Url")] Act act)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Overview,Url,Visible")] Act act)
         {
             if (id != act.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
+                string[] sExpertsIds = Request.Form["experts[]"].ToString().Split(',');
+                /* Add Experts to Act model if they were selected */
+                if (sExpertsIds != null)
+                {
+                    List<int> expertsIds = sExpertsIds.Select(int.Parse).ToList();
+                    ICollection<Expert> experts = await _context.Experts.Where(e => expertsIds.Contains(e.Id)).ToListAsync();
+
+                    ICollection<ActExpert> actExpertList = new List<ActExpert>();
+                    foreach (Expert expert in experts)
+                    {
+                        actExpertList.Add(new ActExpert
+                        {
+                            Act = act,
+                            Expert = expert
+                        });
+                    }
+                    act.ActExpert = actExpertList;
+                }
                 try
                 {
                     _context.Update(act);

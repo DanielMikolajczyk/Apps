@@ -57,6 +57,7 @@ namespace Apps.Services.Downloaders
                             act.Points = 0;
                             act.Url = downloadUrl;
                             act.Pdf = pdf;
+                            act.Visible = false;
 
                             _context.Add(pdf);
                             _context.Add(act);
@@ -104,6 +105,7 @@ namespace Apps.Services.Downloaders
                         act.Points = 0;
                         act.Url = downloadUrl;
                         act.Pdf = pdf;
+                        act.Visible = false;
 
                         _context.Add(pdf);
                         _context.Add(act);
@@ -150,6 +152,7 @@ namespace Apps.Services.Downloaders
                         act.Points = 0;
                         act.Url = downloadUrl;
                         act.Pdf = pdf;
+                        act.Visible = false;
 
                         _context.Add(pdf);
                         _context.Add(act);

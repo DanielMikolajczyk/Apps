@@ -18,5 +18,6 @@ namespace Apps.Models
         public Pdf Pdf { get; set; }
         public ICollection<ActApplicationUser> ActVotes { get; set; }
         public ICollection<ActExpert> ActExpert { get; set; }
+        public bool Visible { get; set; }
     }
 }
