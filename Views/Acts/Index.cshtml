@@ -1,47 +1,55 @@
 ﻿@model IEnumerable<Apps.Models.Act>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista aktow";
 }
+<div class="bg-light p-4 shadow rounded" style="min-height: 100vh;">
 
-<h1>Index</h1>
+    <div>
+        <h1>Lista dostępnych aktów prawnych</h1>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Overview)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Points)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Url)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.HasClaim("Admin", "true"))
         {
+            <p>
+                <a asp-action="Create">Stwórz nowy</a>
+            </p>
+        }
+    }
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Points)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Url)
+                </th>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (User.HasClaim("Admin", "true"))
+                    {
+                        <th scope="col">Opcje</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <th scope="row">
                     @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Overview)
-                </td>
+                </th>
                 <td class="row">
                     <span class="text-success col-sm" data-vote="+" data-id="@item.Id"> + </span>
-                    @if(null != @item.ActVotes)
+                    @if (null != @item.ActVotes)
                     {
-
                         <div class="col-sm font-weight-bold">@item.ActVotes.Sum(i => i.Vote)</div>
                     }
                     else
@@ -53,16 +61,22 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Url)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (User.HasClaim("Admin", "true"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    }
+                }
             </tr>
-        }
-    </tbody>
-</table>
-
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
     <script>
