@@ -46,7 +46,7 @@ namespace Apps.Controllers.API
                         ApplicationUser = user,
                         Comment = comment,
                         Timestamp = DateTime.Now,
-                        Vote = vote == "+" ? 1 : -1,
+                        Vote = vote == "plus" ? 1 : -1,
                     };
 
                     _context.CommentApplicationUsers.Add(commentApplicationUser);

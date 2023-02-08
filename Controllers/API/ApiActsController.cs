@@ -47,7 +47,7 @@ namespace Apps.Controllers.API
                         ApplicationUser = user,
                         Act = act,
                         Timestamp = DateTime.Now,
-                        Vote = vote == "+" ? 1 : -1,
+                        Vote = vote == "plus" ? 1 : -1,
                     };
 
                     _context.ActApplicationUsers.Add(actApplicationUser);

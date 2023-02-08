@@ -47,7 +47,7 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </th>
                 <td class="row">
-                    <span class="text-success col-sm" data-vote="+" data-id="@item.Id"> + </span>
+                    <span class="text-success col-sm" data-vote="plus" data-id="@item.Id"> + </span>
                     @if (null != @item.ActVotes)
                     {
                         <div class="col-sm font-weight-bold">@item.ActVotes.Sum(i => i.Vote)</div>
@@ -56,7 +56,7 @@
                     {
                         <div class="col-sm font-weight-bold">0</div>
                     }
-                    <span class="text-danger col-sm" data-vote="-" data-id="@item.Id"> - </span>
+                    <span class="text-danger col-sm" data-vote="minus" data-id="@item.Id"> - </span>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Url)
