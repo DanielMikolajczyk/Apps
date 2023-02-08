@@ -13,14 +13,25 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Year</label>
-                <input class="form-control" name="Year"/>
+                <input class="form-control" name="Year" />
             </div>
             <div class="form-group">
                 <label class="control-label">Id</label>
-                <input class="form-control" name="ActId"/>
+                <input class="form-control" name="ActId" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Download" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="DownloadPdfLink">
+            <div class="form-group">
+                <label class="control-label">Link</label>
+                <input class="form-control" name="Link" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -17,5 +17,6 @@ namespace Apps.Models
         public ICollection<Comment> Comments { get; set; }
         public Pdf Pdf { get; set; }
         public ICollection<ActApplicationUser> ActVotes { get; set; }
+        public ICollection<ActExpert> ActExpert { get; set; }
     }
 }

@@ -85,8 +85,11 @@ namespace Apps.Controllers
         }
 
         // GET: Acts/Create
-        public IActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            ICollection<Expert> experts = await _context.Experts.ToListAsync();
+
+            ViewBag.Experts = experts;
             return View();
         }
 
@@ -95,10 +98,30 @@ namespace Apps.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Overview,Points,Url")] Act act)
+        public async Task<IActionResult> Create([Bind("Id,Title,Overview,Url")] Act act)
         {
             if (ModelState.IsValid)
             {
+                act.Points = 0;
+
+                string[] sExpertsIds = Request.Form["experts[]"].ToString().Split(',');
+                /* Add Experts to Act model if they were selected */
+                if (sExpertsIds != null)
+                {
+                    List<int> expertsIds = sExpertsIds.Select(int.Parse).ToList();
+                    ICollection<Expert> experts = await _context.Experts.Where(e => expertsIds.Contains(e.Id)).ToListAsync();
+
+                    ICollection<ActExpert> actExpertList = new List<ActExpert>();
+                    foreach(Expert expert in experts)
+                    {
+                        actExpertList.Add(new ActExpert{
+                            Act = act,
+                            Expert = expert
+                        });
+                    }
+                    act.ActExpert = actExpertList;
+                }
+
                 _context.Add(act);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

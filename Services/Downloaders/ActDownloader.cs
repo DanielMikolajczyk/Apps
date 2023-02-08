@@ -119,6 +119,52 @@ namespace Apps.Services.Downloaders
             return returnValue;
         }
 
+        public int downloadLink(string pdfLink)
+        {
+            int returnValue = 0;
+            int year = DateTime.Now.Year;
+            string directoryPath = _path + year;
+            string pdfId = pdfLink.Substring(38, 3);
+            int pdfIdi = int.Parse(pdfId);
+            /* Create directory for pdfs released in specified year */
+            createDirectory(directoryPath);
+
+            using (WebClient client = new WebClient())
+            {
+                string downloadUrl = generateDownloadUrl(pdfIdi);
+                string fullPath = directoryPath + _directorySeparator + pdfIdi + _fileExtension;
+
+                if (!checkIfActAlreadyDownloaded(fullPath))
+                {
+                    try
+                    {
+                        client.DownloadFile(downloadUrl, fullPath);
+
+                        Pdf pdf = new Pdf();
+                        pdf.Title = pdfId.ToString();
+                        pdf.Path = fullPath;
+
+                        Act act = new Act();
+                        act.Title = pdfId.ToString();
+                        act.Overview = "To be added.";
+                        act.Points = 0;
+                        act.Url = downloadUrl;
+                        act.Pdf = pdf;
+
+                        _context.Add(pdf);
+                        _context.Add(act);
+                        _context.SaveChanges();
+                    }
+                    catch (WebException ex)
+                    {
+                        returnValue = 1;
+                    }
+                }
+            }
+
+            return returnValue;
+        }
+
         /* 
          * Returns downloadUrl example: 
          * _downloadUrl : "https://dziennikustaw.gov.pl/D"

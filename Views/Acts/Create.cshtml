@@ -23,13 +23,18 @@
                 <span asp-validation-for="Overview" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Points" class="control-label"></label>
-                <input asp-for="Points" class="form-control" />
-                <span asp-validation-for="Points" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Url" class="control-label"></label>
                 <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="experts[]" class="control-label"></label>
+                <select name="experts[]" class="form-control" multiple>
+                    @foreach(Expert expert in ViewBag.Experts)
+                    {
+                        <option value="@expert.Id">@expert.Name</option>
+                    }
+                </select>
                 <span asp-validation-for="Url" class="text-danger"></span>
             </div>
             <div class="form-group">

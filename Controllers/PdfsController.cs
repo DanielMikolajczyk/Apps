@@ -62,6 +62,26 @@ namespace Apps.Controllers
             return View();
         }
 
+        // POST: Acts/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DownloadPdfLink()
+        {
+            string link = Request.Form["Link"];
+            if (ModelState.IsValid)
+            {
+                ActDownloader actDownloader = new ActDownloader(_context);
+
+                if (link.StartsWith("https://dziennikustaw.gov.pl/D"))
+                {
+                    actDownloader.downloadLink(link);
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            return View();
+        }
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public IActionResult Download()
